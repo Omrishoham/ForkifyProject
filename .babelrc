@@ -1,0 +1,13 @@
+//responsible to convert the code from es6 to es5
+{
+    "presets":[
+        ["env",{
+            "targets":{
+                "browsers":[
+                    "last 5 versions",
+                    "ie>=8"
+                ]
+            }
+        }]
+    ]
+}
