@@ -40,5 +40,14 @@ elements.searchForm.addEventListener('submit',event=>{
     controlSearch();
 });
 
-search.getResults();
+//the click is on the div who have more than 1 button sometimes so we pass into the event
+elements.searchResultPages.addEventListener('click',(event)=>{
+    const btn = event.target.closest('.btn-inline');//closest; gives us the specific element we looking for(button with btn-inline class) who nearly clicked on
+    if(btn){
+        const goToPage = parseInt(btn.dataset.goto,10);//get the number page the user want to go to
+        searchView.clearResults();
+        searchView.renderResults(state.search.result,goToPage);
+    }
+});
+
 

@@ -7,7 +7,8 @@ export const clearInput = () => {
 }
 
 export const clearResults = ()=>{
-    elements.searchResultList.innerHTML = '';
+    elements.searchResultList.innerHTML = '';//clear results
+    elements.searchResultPages.innerHTML = '';//clear buttons
 }
 
 const limitRecipeTitle = (title,limit=17)=>{
@@ -44,8 +45,46 @@ const renderRecipe = (recipe)=>{
     elements.searchResultList.insertAdjacentHTML('beforeend',markup);//a func that insert the html code exactly where we want with the specific location
 };
 
-export const renderResults = (recipes) => {
-    recipes.forEach(recipe=>renderRecipe(recipe));
+//func to create button
+//type:'prev' or 'next'
+const createButton = (page,type)=>`
+<button class="btn-inline results__btn--${type}" data-goto=${type==="prev"?page-1:page+1}>
+<span>Page ${type==="prev"?page-1:page+1}</span>
+<svg class="search__icon">//to render the icon
+ <use href="img/icons.svg#${type==="prev"?"icon-triangle-left":"icon-triangle-right"}"></use>
+</svg>
+</button>
+`;
+
+//private func we call in view to render the buttons
+const renderButtons = (page,numResults,resPerPage)=>{
+    const pages = Math.ceil(numResults/resPerPage);//circle up to an integer number
+    let button;
+    if(page===1 && pages>1){
+       button = createButton(page,'next')
+    }
+    else if(page<pages){
+        button = `
+        ${createButton(page,'prev')}
+        ${createButton(page,'next')}
+        `;
+    }
+    else if(page===pages && pages>1){
+        button = createButton(page,'prev');
+    }
+
+    elements.searchResultPages.insertAdjacentHTML('afterbegin',button);
+
+};
+
+//render 10 results every time we call the func, we can pass page and how much res per page
+export const renderResults = (recipes,page=1,resPerPage=10) => {
+    //render results of the current page
+    const start = (page-1)*resPerPage;
+    const end = page*resPerPage;
+    recipes.slice(start,end).forEach(recipe=>renderRecipe(recipe));
+    //render pagination buttons
+    renderButtons(page,recipes.length,resPerPage);
 };
 
 
