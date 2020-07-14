@@ -1,0 +1,1 @@
+export const proxy = 'https://cors-anywhere.herokuapp.com/';//to cross domain error
