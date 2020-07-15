@@ -4,7 +4,8 @@ export const elements = {
     searchResult:document.querySelector('.results'),
     searchResultList:document.querySelector('.results__list'),
     searchResultPages:document.querySelector('.results__pages'),
-    recipe:document.querySelector('.recipe')
+    recipe:document.querySelector('.recipe'),
+    shopping:document.querySelector('.shopping__list')
 
     //we cant pick an elements that didnt shawn in the beginning of the app
 

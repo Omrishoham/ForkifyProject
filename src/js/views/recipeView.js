@@ -113,14 +113,14 @@ export const renderRecipe = (recipe)=>{
     
 };
 
+//update the servings and ingredients in the view
 export const updateServingsIngredients = (recipe)=>{
-    //updaet servings
+    //update servings
     document.querySelector('.recipe__info-data--people').textContent = recipe.servings;
 
     //update ingredients
     const countElements = Array.from(document.querySelectorAll('.recipe__count'));//select all count elements and put in array
     countElements.forEach((element,index)=>{
-        element.textContent = formatCount(recipe.ingredients[i].count);
-    })
-
+        element.textContent = formatCount(recipe.ingredients[index].count);
+    });
 }

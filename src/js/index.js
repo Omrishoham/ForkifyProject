@@ -1,8 +1,10 @@
 //this is our controller
 import Search from './models/Search';
 import Recipe from './models/Recipe';
+import List from './models/List'
 import * as searchView from './views/searchView';
 import * as recipeView from './views/recipeView';
+import * as listView from './views/listView';
 import { elements, renderLoader,clearLoader } from './views/base';
 
 /*Global state of the app
@@ -91,7 +93,6 @@ const controlRecipe = async ()=>{
         //Calc servings and time
         state.recipe.calcServings(); 
         state.recipe.calcTime();
-        console.log(state.recipe);
 
         //Render the recipe
         clearLoader();
@@ -105,6 +106,24 @@ const controlRecipe = async ()=>{
     }
 };
 
+/*
+LIST CONTROLLER
+*/
+
+const controlList = () =>{
+    //create a list if there is none yet
+    if(!state.list){
+        state.list = new List();
+    }
+
+    //add each ingredient to the list
+    state.recipe.ingredients.forEach(ingredient=>{
+        const item=state.list.addItem(ingredient.count,ingredient.unit,ingredient.ingredient);//add item to list and get back the item
+        listView.renderItem(item);//render the item on the view
+    })
+
+}
+
 //adding 2 same event listeners
 //1.when we have a hashchang we call controlRecipe that render the specific recipe with the id from the hash
 //2.if user load a page we also call controlRecipe
@@ -113,19 +132,37 @@ const controlRecipe = async ()=>{
 //Handling recipe button clicks
 //the click is on the div recipe
 elements.recipe.addEventListener('click',event=>{
-    if(event.target.matches('.btn-decrease,.btn-decrease *')){ //matches btn-decrease or any child of him
+    if(event.target.matches('.btn-decrease,.btn-decrease *'))
+    { //matches btn-decrease or any child of him
     //decrease button is clicked
     if(state.recipe.servings>1){
     state.recipe.updateServings('dec');
     recipeView.updateServingsIngredients(state.recipe);
     }
-
     }else if(event.target.matches('.btn-increase,.btn-increase *')){
         //increase button is clicked
-        if(state.recipe.servings>1){
         state.recipe.updateServings('inc');
         recipeView.updateServingsIngredients(state.recipe);
-        }
+        //handle Add all items of the ingredients of the recipe to shopping list
+    }else if(event.target.matches('.recipe__btn--add , .recipe__btn--add *')){
+        controlList();
     }
 
+});
+
+///HANDLE DELETE AND UPDATE LIST ITEM EVENTS//
+elements.shopping.addEventListener('click' , event=>{
+    const id = event.target.closest('.shopping__item').dataset.itemid;//get the id of the specific item
+
+    if(event.target.matches('.shopping__delete , .shopping__delete *')){//if clicked on delete or one of his childs clements
+        state.list.deleteItem(id);//delete from the list model
+        listView.deleteItem(id);//delete from the list view
+    }
+    else if (event.target.matches('.shopping__count-value')){
+        const val =parseFloat(event.target.value);//get the new valuee of the class of the input type
+        state.list.updateCount(id,val);
+    }
 })
+
+
+
