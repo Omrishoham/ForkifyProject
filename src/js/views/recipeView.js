@@ -11,12 +11,13 @@ const formatCount = (count)=>{
     if(count){
         //try to seperate the number and its fraction
         const [int, dec] = count.toString().split('.').map(element=>parseInt(element,10));
+        
 
         //if the number dont have a fraction
         if(!dec){
             return int;
         }
-        if(int ===0){
+        if(int === 0){
             const fraction=new Fraction(count);
             return `${fraction.numerator}/${fraction.denominator}`;
         }
@@ -25,18 +26,18 @@ const formatCount = (count)=>{
             return `${int.toString()} ${fraction.numerator}/${fraction.denominator}`
         }
     }
-    return '?';
+    return '';
 }
 
 //return a li that contains the ingredient that we get an object(count,unit,ingredient)
-const createIngredient = (ingredient)=>`  
+const createIngredient = (ingredient)=>`
 <li class="recipe__item">
 <svg class="recipe__icon">
 <use href="img/icons.svg#icon-check"></use>
 </svg>
 <div class="recipe__count">${formatCount(ingredient.count)}</div>
 <div class="recipe__ingredient">
-<span class="${ingredient.unit}">g</span>
+<span class="recipe__unit">${ingredient.unit}</span>
 ${ingredient.ingredient}
 </div>
 </li>
@@ -111,3 +112,15 @@ export const renderRecipe = (recipe)=>{
     elements.recipe.insertAdjacentHTML('afterbegin',markup);
     
 };
+
+export const updateServingsIngredients = (recipe)=>{
+    //updaet servings
+    document.querySelector('.recipe__info-data--people').textContent = recipe.servings;
+
+    //update ingredients
+    const countElements = Array.from(document.querySelectorAll('.recipe__count'));//select all count elements and put in array
+    countElements.forEach((element,index)=>{
+        element.textContent = formatCount(recipe.ingredients[i].count);
+    })
+
+}

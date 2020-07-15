@@ -76,17 +76,22 @@ const controlRecipe = async ()=>{
         recipeView.clearRecipe();
         renderLoader(elements.recipe);
 
+        //highlight selected search item
+        if(state.search){
+        searchView.highlightSelected(id);
+        }
+
         //Create new Recipe object
         state.recipe = new Recipe(id);
 
         //Get recipe data
         await state.recipe.getRecipe();
         state.recipe.parseIngredients();
-        console.log(state.recipe);
 
         //Calc servings and time
         state.recipe.calcServings(); 
         state.recipe.calcTime();
+        console.log(state.recipe);
 
         //Render the recipe
         clearLoader();
@@ -105,3 +110,22 @@ const controlRecipe = async ()=>{
 //2.if user load a page we also call controlRecipe
 ['hashchange','load'].forEach(event=>window.addEventListener(event,controlRecipe));//if we call func in add event listener we dont use parenthesis
 
+//Handling recipe button clicks
+//the click is on the div recipe
+elements.recipe.addEventListener('click',event=>{
+    if(event.target.matches('.btn-decrease,.btn-decrease *')){ //matches btn-decrease or any child of him
+    //decrease button is clicked
+    if(state.recipe.servings>1){
+    state.recipe.updateServings('dec');
+    recipeView.updateServingsIngredients(state.recipe);
+    }
+
+    }else if(event.target.matches('.btn-increase,.btn-increase *')){
+        //increase button is clicked
+        if(state.recipe.servings>1){
+        state.recipe.updateServings('inc');
+        recipeView.updateServingsIngredients(state.recipe);
+        }
+    }
+
+})

@@ -53,13 +53,13 @@ export default class Recipe{
             if(unitIndex>-1){
                 //there is unit
                 //ex, 4 1/2 cups, arrCount = [4,1/2]
-                //ex, 4 cups, arCount = [4]  
+                //ex, 4 cups, arrCount = [4]  
                 const arrCount = arrIng.slice(0, unitIndex);
                 let count;
                 if (arrCount.length === 1){
-                    count=eval(arrIng[0].replace('-','+')).toFixed(2);// for cases like " 4-1/2 cups "
+                    count=eval(arrIng[0].replace('-','+'));// for cases like " 4-1/2 cups "
                 }else{
-                    count=eval(arrIng.slice(0,unitIndex).join('+')).toFixed(2); //calculates 4+1/2 and saves it to count variable
+                    count=eval(arrIng.slice(0,unitIndex).join('+')); //calculates 4+1/2 and saves it to count variable
                 }
                 objIngredient = {
                     count,
@@ -69,14 +69,14 @@ export default class Recipe{
             }else if (parseInt(arrIng[0],10)){
                 //there is not unit but 1st element is number
                 objIngredient = {
-                    count: 1,
-                    unit: parseInt(arrIng[0],10),
+                    count:arrIng[0],
+                    unit: '',
                     ingredient : arrIng.slice(1).join(' ') //full ingredient name without the quantity
                 }
             }else if(unitIndex === -1){
                 //there is no unit and no number in first position of the ingredient
                 objIngredient = {
-                    count: 1,
+                    count: null,
                     unit: '',
                     ingredient //es6 new feature
                 }
@@ -84,5 +84,21 @@ export default class Recipe{
             return objIngredient;
         })
         this.ingredients = newIngredients;
+    }
+
+    updateServings(type){
+        //Servings
+        const newServings = type==='dec'?this.servings-1:this.servings+1;
+
+        //Ingredients
+        this.ingredients.forEach(ingredient=>{
+            //if count no null
+            if(ingredient.count){
+            ingredient.count*=(newServings/this.servings);
+            }
+        });
+
+
+        this.servings = newServings;
     }
 }

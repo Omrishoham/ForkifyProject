@@ -6,6 +6,7 @@ export const elements = {
     searchResultPages:document.querySelector('.results__pages'),
     recipe:document.querySelector('.recipe')
 
+    //we cant pick an elements that didnt shawn in the beginning of the app
 
 };
 

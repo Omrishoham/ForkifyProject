@@ -11,6 +11,17 @@ export const clearResults = ()=>{
     elements.searchResultPages.innerHTML = '';//clear buttons
 }
 
+//make the recipe gray when we click it
+export const highlightSelected = (id)=>{
+    //select all elements with results__link and make them not active
+    const resultsArr = Array.from(document.querySelectorAll('.results__link'));
+    resultsArr.forEach(element=>{
+        element.classList.remove('results__link--active');
+    })
+    //select the element with a href=id and add the class="result__link-active"
+    document.querySelector(`a[href="#${id}"]`).classList.add('results__link--active');
+}
+
 const limitRecipeTitle = (title,limit=17)=>{
     const newTitle = [];
     if(title.length>limit){
