@@ -1,10 +1,12 @@
 //this is our controller
 import Search from './models/Search';
 import Recipe from './models/Recipe';
-import List from './models/List'
+import List from './models/List';
+import Likes from './models/Likes'
 import * as searchView from './views/searchView';
 import * as recipeView from './views/recipeView';
 import * as listView from './views/listView';
+import * as likesView from './views/likesView';
 import { elements, renderLoader,clearLoader } from './views/base';
 
 /*Global state of the app
@@ -96,11 +98,12 @@ const controlRecipe = async ()=>{
 
         //Render the recipe
         clearLoader();
-        recipeView.renderRecipe(state.recipe);
+        recipeView.renderRecipe(state.recipe,state.likes.isLiked(id));
 
 
         }
         catch(error){
+            console.log(error);
             alert('error in processing recipe!');
         }
     }
@@ -124,6 +127,48 @@ const controlList = () =>{
 
 }
 
+//we dont have local storage yet so we in loading the page we create likes
+state.likes = new Likes();
+likesView.toggleLikeMenu(state.likes.getNumLikes());
+
+/*
+Like Controller
+*/
+const controlLike = ()=>{
+    if(!state.likes){
+        state.likes = new Likes();
+    }
+    const currentID = state.recipe.id;
+
+    //User has not liked yet current recipe
+    if(!state.likes.isLiked(currentID)){
+        //add like to state
+        const newLike = state.likes.addLike(currentID,state.recipe.title,state.recipe.author,state.recipe.img);
+        //toggle the like button
+        likesView.toggleLikeBtn(true);
+
+        //add like to ui list
+        likesView.renderLike(newLike);
+
+    
+    }
+    //User has liked current recipe
+    else{
+        //delete like from state
+        state.likes.deleteLike(currentID);
+        //toggle the like button
+        likesView.toggleLikeBtn(false);
+
+        //remove like from ui list
+        likesView.deleteLike(currentID);        
+
+    }
+
+
+
+    likesView.toggleLikeMenu(state.likes.getNumLikes());
+};
+
 //adding 2 same event listeners
 //1.when we have a hashchang we call controlRecipe that render the specific recipe with the id from the hash
 //2.if user load a page we also call controlRecipe
@@ -146,6 +191,9 @@ elements.recipe.addEventListener('click',event=>{
         //handle Add all items of the ingredients of the recipe to shopping list
     }else if(event.target.matches('.recipe__btn--add , .recipe__btn--add *')){
         controlList();
+    }else if(event.target.matches('.recipe__love, .recipe__love *')){
+        controlLike();
+
     }
 
 });

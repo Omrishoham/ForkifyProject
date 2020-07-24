@@ -19,10 +19,10 @@ export const highlightSelected = (id)=>{
         element.classList.remove('results__link--active');
     })
     //select the element with a href=id and add the class="result__link-active"
-    document.querySelector(`a[href="#${id}"]`).classList.add('results__link--active');
+    document.querySelector(`.results__link[href="#${id}"]`).classList.add('results__link--active');
 }
 
-const limitRecipeTitle = (title,limit=17)=>{
+export const limitRecipeTitle = (title,limit=17)=>{
     const newTitle = [];
     if(title.length>limit){
         title.split(' ').reduce((sum,cur)=>{//reduce func executes a reducer func that we provide on each arrays element

@@ -3,7 +3,7 @@ export default class Likes{
         this.likes = [];
     }
 
-    addLike(id,title,author,image){
+    addLike(id,title,author,img){
         const like = {
             id,
             title,
@@ -16,10 +16,10 @@ export default class Likes{
 
     deleteLike(id){
             const index = this.likes.findIndex(el=> el.id===id);//find index of the item's id, return index
-            this.items.splice(index,1);
+            this.likes.splice(index,1);
     }
 
-    isLikes(id){
+    isLiked(id){
         return this.likes.findIndex(el=>el.id===id)!== -1;//return true if there is a like to the item id we checkin
     }
 
