@@ -21,7 +21,6 @@ const state = {};
 /*
 SEARCH CONTROLLER
 */
-
 //function that we call when event submit on search form
 //remember: async function returns a promise
 //remember:if we wanna use await we need to make the func async
@@ -36,10 +35,8 @@ const controlSearch = async ()=>{
         searchView.clearInput();
         searchView.clearResults();
         renderLoader(elements.searchResult);
-
         //search for recipes
         await state.search.getResults();
-
         //render results on UI
         clearLoader();
         searchView.renderResults(state.search.result);
@@ -65,8 +62,6 @@ elements.searchResultPages.addEventListener('click',(event)=>{
         searchView.renderResults(state.search.result,goToPage);
     }
 });
-
-
 /*
 RECIPE CONTROLLER
 */
@@ -84,7 +79,6 @@ const controlRecipe = async ()=>{
         if(state.search){
         searchView.highlightSelected(id);
         }
-
         //Create new Recipe object
         state.recipe = new Recipe(id);
 
@@ -99,8 +93,6 @@ const controlRecipe = async ()=>{
         //Render the recipe
         clearLoader();
         recipeView.renderRecipe(state.recipe,state.likes.isLiked(id));
-
-
         }
         catch(error){
             console.log(error);
@@ -112,7 +104,6 @@ const controlRecipe = async ()=>{
 /*
 LIST CONTROLLER
 */
-
 const controlList = () =>{
     //create a list if there is none yet
     if(!state.list){
@@ -126,11 +117,6 @@ const controlList = () =>{
     })
 
 }
-
-//we dont have local storage yet so we in loading the page we create likes
-state.likes = new Likes();
-likesView.toggleLikeMenu(state.likes.getNumLikes());
-
 /*
 Like Controller
 */
@@ -148,9 +134,7 @@ const controlLike = ()=>{
         likesView.toggleLikeBtn(true);
 
         //add like to ui list
-        likesView.renderLike(newLike);
-
-    
+        likesView.renderLike(newLike);    
     }
     //User has liked current recipe
     else{
@@ -163,11 +147,16 @@ const controlLike = ()=>{
         likesView.deleteLike(currentID);        
 
     }
-
-
-
     likesView.toggleLikeMenu(state.likes.getNumLikes());
 };
+
+//Restore liked recipes on page load
+window.addEventListener('load',()=>{
+    state.likes = new Likes();
+    state.likes.readStorage();//restore from local storage the array of likes of likes objact
+    likesView.toggleLikeMenu(state.likes.getNumLikes());//toggle like menu button
+    state.likes.likes.forEach((like)=>likesView.renderLike(like));
+});
 
 //adding 2 same event listeners
 //1.when we have a hashchang we call controlRecipe that render the specific recipe with the id from the hash
@@ -193,9 +182,7 @@ elements.recipe.addEventListener('click',event=>{
         controlList();
     }else if(event.target.matches('.recipe__love, .recipe__love *')){
         controlLike();
-
     }
-
 });
 
 ///HANDLE DELETE AND UPDATE LIST ITEM EVENTS//
@@ -210,7 +197,4 @@ elements.shopping.addEventListener('click' , event=>{
         const val =parseFloat(event.target.value);//get the new valuee of the class of the input type
         state.list.updateCount(id,val);
     }
-})
-
-
-
+});

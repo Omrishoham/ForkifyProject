@@ -9,8 +9,9 @@ export const clearRecipe = ()=>{
 const formatCount = (count)=>{
     //if the object can be counted
     if(count){
+        const newCount = Math.round(count*10000)/10000
         //try to seperate the number and its fraction
-        const [int, dec] = count.toString().split('.').map(element=>parseInt(element,10));
+        const [int, dec] = newCount.toString().split('.').map(element=>parseInt(element,10));
         
 
         //if the number dont have a fraction
@@ -18,11 +19,11 @@ const formatCount = (count)=>{
             return int;
         }
         if(int === 0){
-            const fraction=new Fraction(count);
+            const fraction=new Fraction(newCount);
             return `${fraction.numerator}/${fraction.denominator}`;
         }
         else{
-            const fraction = new Fraction(count-int);
+            const fraction = new Fraction(newCount-int);
             return `${int.toString()} ${fraction.numerator}/${fraction.denominator}`
         }
     }
