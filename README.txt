@@ -1,1 +1,1 @@
-forkify project
+Forkify is a food web app, some of its features are - food search engine - for each kind of meal you can see its ingredients (using ajax calls to external api) and making ingredients orders. during the app development i used pure vanilla js (es6) and its most advanced features. (this project created alongside udemy course "the complete javascript course 2020")
